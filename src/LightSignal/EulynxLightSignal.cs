@@ -222,7 +222,7 @@ namespace EulynxLive.LightSignal
         public BasicAspectType BasicAspectType { get { return BasicAspectType1; } }
 
         public bool Initialized { get; set; }
-        
+
         public BasicAspectType BasicAspectType1 { get; set; }
         public BasicAspectTypeExtension BasicAspectTypeExtension { get; set; }
         public SpeedIndicators SpeedIndicators { get; set; }
@@ -321,7 +321,7 @@ namespace EulynxLive.LightSignal
                         await _outgoingMessages.Writer.WriteAsync(response);
                     }
                 }
-            } 
+            }
             catch (OperationCanceledException)
             {
                 var pdiNotAvailable = new LightSignalPDINotAvailableMessage(Id, _remoteId);
@@ -364,7 +364,7 @@ namespace EulynxLive.LightSignal
     {
         public MultiSectionLightSignal(ILogger<EulynxLightSignal> logger, string id, string remoteId, Channel<EulynxMessage> outgoingMessages) : base(logger, id, remoteId, outgoingMessages) { }
 
-        public override async Task Reset()
+        public override Task Reset()
         {
             Initialized = false;
             BasicAspectType1 = BasicAspectType.Stop_Danger_1;
@@ -375,6 +375,7 @@ namespace EulynxLive.LightSignal
             DirectionIndicatorsAnnouncements = DirectionIndicatorsAnnouncements.AnnouncementDark;
             Luminosity = Luminosity.Day;
             TriggerUpdate();
+            return Task.CompletedTask;
         }
     }
 
@@ -382,7 +383,7 @@ namespace EulynxLive.LightSignal
     {
         public DistantLightSignal(ILogger<EulynxLightSignal> logger, string id, string remoteId, Channel<EulynxMessage> outgoingMessages) : base(logger, id, remoteId, outgoingMessages) { }
 
-        public override async Task Reset()
+        public override Task Reset()
         {
             Initialized = false;
             BasicAspectType1 = BasicAspectType.ExpectStop;
@@ -393,6 +394,7 @@ namespace EulynxLive.LightSignal
             DirectionIndicatorsAnnouncements = DirectionIndicatorsAnnouncements.AnnouncementDark;
             Luminosity = Luminosity.Day;
             TriggerUpdate();
+            return Task.CompletedTask;
         }
     }
 }

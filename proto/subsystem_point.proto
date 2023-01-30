@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+option csharp_namespace = "EulynxBridge";
+option java_package = "de.ibw.etcs.eulynx";
+
+package eulynx.point;
+
+service SubsystemPoint {
+  rpc PdiVersionCheck (PdiVersionCheckCommand) returns (PdiVersionCheckMessage);
+  rpc Initialization (InitializationRequestCommand) returns (stream InitializationMessage);
+  rpc MovePoint (MovePointCommand) returns (PointPositionMessage);
+}
+
+message PdiVersionCheckCommand {
+  string senderId = 1;
+  string receiverId = 2;
+  int32 SenderPdiVersion = 3;
+}
+
+message PdiVersionCheckMessage {
+  string senderId = 1;
+  string receiverId = 2;
+  PdiVersionCheckResult ResultPdiVersionCheck = 3;
+  int32 SenderPdiVersion = 4;
+  string Checksum = 5;
+}
+
+enum PdiVersionCheckResult {
+  NoMatch = 0;
+  Match = 1;
+}
+
+message InitializationRequestCommand {
+  string senderId = 1;
+  string receiverId = 2;
+}
+
+message InitializationMessage {
+  string senderId = 1;
+  string receiverId = 2;
+  InitializationMessageType type = 3;
+  ReportedPointPosition reportedPointPosition = 4;
+  ReportedDegradedPointPosition reportedDegradedPointPosition = 5;
+}
+
+enum InitializationMessageType {
+  StartInitialization = 0;
+  ReportStatus = 1;
+  EndInitialization = 2;
+}
+
+message MovePointCommand {
+  string senderId = 1;
+  string receiverId = 2;
+  CommandedPointPosition commandedPointPosition = 3;
+}
+
+enum CommandedPointPosition {
+  CommandedRight = 0;
+  CommandedLeft = 1;
+}
+
+message PointPositionMessage {
+  string senderId = 1;
+  string receiverId = 2;
+  ReportedPointPosition reportedPointPosition = 3;
+  ReportedDegradedPointPosition reportedDegradedPointPosition = 4;
+}
+
+enum ReportedPointPosition {
+  ReportedRight = 0;
+  ReportedLeft = 1;
+  ReportedNoEndPosition = 2;
+  ReportedTrailed = 3;
+}
+
+enum ReportedDegradedPointPosition {
+  DegradedRight = 0;
+  DegradedLeft = 1;
+  NotDegraded = 3;
+  DegradedNotApplicable = 4;
+}
